@@ -1,21 +1,43 @@
 // Define all the dependencies
 var express = require('express')
 var app = express()
+var User = require('./User');
 var mongoose = require('mongoose')
 mongoose.createConnection().openUri('mongodb://localhost:27017/test')
 // mongoose.connect('localhost:27017/pci-dev')
-var Schema = mongoose.Schema
+// var Schema = mongoose.Schema
 
-var userDataSchema = new Schema({
-	title: {
-		type: String, 
-		required: true 
-	},
-	content: String,
-	author: String
-}, { collection: 'user-data' })
+// var userDataSchema = new Schema({
+// 	title: {
+// 		type: String, 
+// 		required: true 
+// 	},
+// 	content: String,
+// 	author: String
+// }, { collection: 'user-data' })
 
-var UserData = mongoose.model('UserData', userDataSchema)
+// var UserData = mongoose.model('UserData', userDataSchema)
+
+
+
+// create a new user
+var newUser = User({
+  name: 'Peter Quill',
+  username: 'starlord55',
+  password: 'password',
+  admin: true
+});
+
+// save the user
+newUser.save(function(err) {
+  if (err) throw err;
+
+  console.log('User created!');
+});
+
+ 
+
+
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies

@@ -4,19 +4,19 @@ var app = express()
 var mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/test', { useMongoClient: true, promiseLibrary: global.Promise })
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
+
+
 var User = mongoose.model('User', { 
 	username: { type: String, required: true, unique: true },
   	password: { type: String, required: true },
 	name: String,
 	gender: String,
 	age: Number
-});
-
-
-var bodyParser = require('body-parser');
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
+})
 
 
 // Some routing
@@ -82,9 +82,9 @@ app.post('/delete', function (req, res, next) {
 })
 
 
-
-
 // Run the server
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
+
+

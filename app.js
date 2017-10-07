@@ -2,7 +2,8 @@
 var express = require('express')
 var app = express()
 var mongoose = require('mongoose')
-mongoose.connect('localhost:27017/pci-dev')
+mongoose.createConnection().openUri('mongodb://localhost:27017/test')
+// mongoose.connect('localhost:27017/pci-dev')
 var Schema = mongoose.Schema
 
 var userDataSchema = new Schema({
@@ -42,6 +43,7 @@ app.post('/insert', function (req, res, next) {
 		content: req.body.content,
 		author: req.body.author
 	}
+	console.log(item)
 
 	var data = new UserData(item)
 	data.save()

@@ -1,42 +1,16 @@
 // Define all the dependencies
 var express = require('express')
 var app = express()
-var User = require('./User');
 var mongoose = require('mongoose')
-mongoose.createConnection().openUri('mongodb://localhost:27017/test')
-// mongoose.connect('localhost:27017/pci-dev')
-// var Schema = mongoose.Schema
+mongoose.connect('mongodb://localhost/test', { useMongoClient: true, promiseLibrary: global.Promise })
 
-// var userDataSchema = new Schema({
-// 	title: {
-// 		type: String, 
-// 		required: true 
-// 	},
-// 	content: String,
-// 	author: String
-// }, { collection: 'user-data' })
-
-// var UserData = mongoose.model('UserData', userDataSchema)
-
-
-
-// create a new user
-var newUser = User({
-  name: 'Peter Quill',
-  username: 'starlord55',
-  password: 'password',
-  admin: true
+var User = mongoose.model('User', { 
+	username: { type: String, required: true, unique: true },
+  	password: { type: String, required: true },
+	name: String,
+	gender: String,
+	age: Number
 });
-
-// save the user
-newUser.save(function(err) {
-  if (err) throw err;
-
-  console.log('User created!');
-});
-
- 
-
 
 
 var bodyParser = require('body-parser');
@@ -52,54 +26,59 @@ app.get('/', function (req, res, next) {
 
 
 app.get('/get-data', function (req, res, next) {
-	UserData.find()
-		.then(function(doc) {
-	  		res.send(doc)
-	  	})
+	// UserData.find()
+	// 	.then(function(doc) {
+	//   		res.send(doc)
+	//   	})
 })
 
 
 app.post('/insert', function (req, res, next) {
-	var item = {
-		title: req.body.title,
-		content: req.body.content,
-		author: req.body.author
-	}
-	console.log(item)
+	var user = new User({ 
+		username: req.body.username,
+	  	password: req.body.password,
+		name: req.body.name,
+		gender: req.body.gender,
+		age: req.body.age,
+	})
 
-	var data = new UserData(item)
-	data.save()
-
-	res.redirect('/')
-})
-
-
-app.post('/update', function (req, res, next) {
-	var item = {
-		title: req.body.title,
-		content: req.body.content,
-		author: req.body.author
-	}
-	var id = req.body.id
-
-	UserData.findById(id, function(err, doc){
-		if (err){
-			console.log('error, no data found')
-		} 
-
-		doc.title = req.body.title
-		doc.content = req.body.content
-		doc.author = req.body.author
-		doc.save()
-		res.redirect('/')
+	user.save(function (res, err) {
+	  if (err) {
+	    console.log(err);
+	  } else {
+	    console.log('sukses');
+	    res.send(res)
+	  }
 	})
 })
 
 
+app.post('/update', function (req, res, next) {
+	// var item = {
+	// 	title: req.body.title,
+	// 	content: req.body.content,
+	// 	author: req.body.author
+	// }
+	// var id = req.body.id
+
+	// UserData.findById(id, function(err, doc){
+	// 	if (err){
+	// 		console.log('error, no data found')
+	// 	} 
+
+	// 	doc.title = req.body.title
+	// 	doc.content = req.body.content
+	// 	doc.author = req.body.author
+	// 	doc.save()
+	// 	res.redirect('/')
+	// })
+})
+
+
 app.post('/delete', function (req, res, next) {
-	var id = req.body.id
-	UserData.findByIdAndRemove(id).exec()
-	res.redirect('/')
+	// var id = req.body.id
+	// UserData.findByIdAndRemove(id).exec()
+	// res.redirect('/')
 })
 
 
